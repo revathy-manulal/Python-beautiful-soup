@@ -1,0 +1,90 @@
+'''This code uses beautiful soup and request libraries. Beautifulsoup4 here can parse all the 'a href' tags while the request commmand can obtain the source code from the urls obtains from the urls in an 'a href tag'.'''
+
+html_doc = """
+<html>
+		<head>
+			<title>The Dormouse's story</title>
+		</head>
+
+		<body>
+
+			<p class="title"><b>The Dormouse's story</b></p>
+			
+
+<p class="story">Once upon a time there were three little sisters; and their names were
+
+			<a href="http://example.com/elsie" class="sister" id="link1">Elsie</a>
+			
+<a href="http://example.com/lacie" class="sister" id="link2">Lacie</a>
+			
+<a href="http://example.com/tillie" class="sister" id="link3">Tillie</a>
+
+			and they lived at the bottom of a well.</p>
+			
+
+<p class="story">...</p>
+"""
+
+import sys
+import request
+from bs4 
+import BeautifulSoup
+soup = BeautifulSoup(html_doc, 'html.parser')
+
+la=[]
+
+lb=[]
+
+lc=[]
+
+ld=[]
+
+for link1 in soup.find_all('a'):
+
+    la.append(link.get('href'))
+
+    '''got the seed urls from site1'''
+
+    for i in range(len(la)):
+
+    	ra=requests.get(la[i])
+
+   	soup=BeautifulSoup(ra.content)
+
+    
+    for link2 in soup.find_all('a'):
+
+	        lb.append(link.get('href'))
+
+	        '''got the seed urls from site2'''
+
+        	for j in range(len(lb)):
+
+ 	            rb=requests.get(lb[j])
+
+	            soup=BeautifulSoup(rb.content)
+
+        
+            for link3 in soup.find_all('a'):
+
+                	lc.append(link.get('href'))
+
+	                '''got the seed urls from site3'''
+
+	                for k in range(len(lc)):
+
+                    		rc=requests.get(lc[k])
+
+                    		soup=BeautifulSoup(rc.content)
+
+                                for link4 in soup.find_all('a'):
+
+                        		ld.append(link.get('href')
+
+                        		'''got the seed urls from site4'''
+
+
+sum=len(la)+len(lb)+len(lc)+len(ld)
+print sum
+            
+    
