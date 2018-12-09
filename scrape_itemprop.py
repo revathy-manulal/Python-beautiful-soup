@@ -13,22 +13,20 @@ res = requests.get("https://www.myntra.com/dupatta/indya/indya-sea-green-solid-d
 		product = {}
 
 
-		for product_values in range(len(instructions)):
-
-			if product_values==0:
-		
-				recipeSoup = BeautifulSoup(str(instructions[product_values]), "html.parser")
-				valueable_tags = recipeSoup.find_all(itemprop=re.compile(r"\w$"))
+		for product_values in instructions:
+	
+			recipeSoup = BeautifulSoup(str(product_values), "html.parser")
+			valueable_tags = recipeSoup.find_all(itemprop=re.compile(r"\w$"))
 
 
-				product = {}
+			product = {}
 
-				for tag in valueable_tags:
-					contents = tag.contents
-					if '\n' in contents:
-						contents.remove('\n')
-					
-					print tag.get('itemprop'), tag.contents, contents
-					product[tag.get('itemprop')] = contents[0] if len(contents) >0 else ''
+			for tag in valueable_tags:
+				contents = tag.contents
+				if '\n' in contents:
+					contents.remove('\n')
+				
+				print tag.get('itemprop'), tag.contents, contents
+				product[tag.get('itemprop')] = contents[0] if len(contents) >0 else ''
 
 			print product
