@@ -1,1 +1,77 @@
+function schemaOrgParser(context) {
+
+    var extractValue = function(elem) {
+        return elem.getAttribute("content") || elem.innerText
+               || elem.getAttribute("src") || elem.getAttribute("href") || null;
+    };
+
+    var addProperty = function(item,propName,value) {
+        if( typeof(value)==='string' ){
+
+            value = value.trim();
+        }
+        if( Array.isArray(item[propName]) ){
+            item[propName].push(value);
+        }
+        else if( typeof(item[propName])!=='undefined' ){
+            item[propName] = [item[propName], value];
+        }
+        else{
+            item[propName] = value;
+        }
+
+        if(propName==='name'){
+            var nameSlug =  value.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '').replace(/\-\-+/g, '-').replace(/^-+/, '').replace(/-+$/, '');
+            item['product_id'] = nameSlug;
+        }
+
+        
+    }
+
+    var extractItem = function(elem) {
+        var item = {}
+
+        console.log(elem.getAttribute("itemtype").split('/').pop());
+
+        if(elem.getAttribute("itemtype").split('/').pop()==="Product"){
+            item = { _type: elem.getAttribute("itemtype") };
+            var count = 0;
+            // iterate itemprops not nested in another itemscope  
+            var potentialProperties = elem.querySelectorAll('[itemprop]');
+
+            potentialProperties.forEach(function(element) {
+              addProperty(
+                    item,
+                    element.getAttribute("itemprop"),
+                    element.querySelectorAll("[itemscope]").length ? extractItem(element) : extractValue(element));
+                count++;
+            });
+
+            // special case - output at least something
+            if( count===0 )
+                addProperty(item, "_value", extractValue(elem));
+            return item;
+        }         
+    };
+
+    var extractAllItems = function() {
+        var items = [];
+        // find top-level itemscope elements
+        var potentialElements = document.querySelectorAll('[itemscope]');
+
+        potentialElements.forEach(function(element) {
+            var extractedInfo = extractItem(element);
+            if(extractedInfo){
+                items.push( extractedInfo );
+            }
+          
+        });
+
+        return items;
+    };   
+
+    return extractAllItems();
+}
+
+
 
